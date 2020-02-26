@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+	xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="CatalogService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+				<EntitySet Name="Domande" EntityType="CatalogService.Domande"/>
+				<EntitySet Name="Risposte" EntityType="CatalogService.Risposte"/>
+				<AssociationSet Name="Risposte_domanda" Association="CatalogService.Risposte_domanda">
+					<End Role="Risposte" EntitySet="Risposte"/>
+					<End Role="Domande" EntitySet="Domande"/>
+				</AssociationSet>
+			</EntityContainer>
+			<EntityType Name="Domande">
+				<Key>
+					<PropertyRef Name="ID"/>
+				</Key>
+				<Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+				<Property Name="testo" Type="Edm.String"/>
+				<NavigationProperty Name="risposte" Relationship="CatalogService.Risposte_domanda" FromRole="Domande" ToRole="Risposte"/>
+			</EntityType>
+			<EntityType Name="Risposte">
+				<Key>
+					<PropertyRef Name="ID"/>
+				</Key>
+				<Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+				<Property Name="testo" Type="Edm.String"/>
+				<NavigationProperty Name="domanda" Relationship="CatalogService.Risposte_domanda" FromRole="Risposte" ToRole="Domande"/>
+				<Property Name="domanda_ID" Type="Edm.Guid"/>
+			</EntityType>
+			<Association Name="Risposte_domanda">
+				<End Role="Risposte" Type="CatalogService.Risposte" Multiplicity="*"/>
+				<End Role="Domande" Type="CatalogService.Domande" Multiplicity="0..1"/>
+				<ReferentialConstraint>
+					<Principal Role="Domande">
+						<PropertyRef Name="ID"/>
+					</Principal>
+					<Dependent Role="Risposte">
+						<PropertyRef Name="domanda_ID"/>
+					</Dependent>
+				</ReferentialConstraint>
+			</Association>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
